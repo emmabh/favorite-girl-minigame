@@ -4,6 +4,9 @@ export const state = () => {
     domain: "",
     recaptchaKey: null,
     preloaderActive: true,
+    quizInProgress: false,
+    currentQuestionIndex: 0,
+    quizState: "",
     questions: [
       {
         id: 1,
@@ -18,7 +21,7 @@ export const state = () => {
         question: "mess up your sleep schedule to achieve your dream?",
         answers: {
           yes: "it's already messed up",
-          no: "nope"
+          no: "no, I need my 8 hours"
         }
       },
       {
@@ -69,6 +72,12 @@ export const mutations = {
   },
   setPreloaderActive(state, val) {
     state.preloaderActive = val;
+  },
+  setQuizInProgress(state, val) {
+    state.quizInProgress = val;
+  },
+  setCurrentQuestionIndex(state, val) {
+    state.currentQuestionIndex = val;
   }
 };
 

@@ -41,6 +41,7 @@ export default {
 :root {
   --color-white: #fff;
   --color-black: #000;
+  --color-emerald: #003936;
 
   --color-text: var(--color-black);
   --color-bg: var(--color-white);
@@ -54,8 +55,8 @@ export default {
   --font-size-xx-large: 46px;
   --font-size-xxx-large: 56px;
 
-  --font-family-body: sans-serif;
-  --font-family-headline: sans-serif;
+  --font-family-body: "Basica";
+  --font-family-headline: "Basica";
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;

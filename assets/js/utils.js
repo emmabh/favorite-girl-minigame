@@ -1,3 +1,13 @@
+export const QUIZ_STATES = {
+  FAILED: "failed",
+  PASSED: "passed"
+};
+
+export const ANSWER_OPTIONS = {
+  YES: "yes",
+  NO: "no"
+}
+
 export const tickUpdate = cb => {
   let ticking = false;
 
