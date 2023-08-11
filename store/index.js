@@ -6,6 +6,7 @@ export const state = () => {
     preloaderActive: true,
     quizInProgress: false,
     currentQuestionIndex: 0,
+    muted: false,
     quizState: "",
     questions: [
       {
@@ -78,6 +79,9 @@ export const mutations = {
   },
   setCurrentQuestionIndex(state, val) {
     state.currentQuestionIndex = val;
+  },
+  setMuted(state, val) {
+    state.muted = val;
   }
 };
 

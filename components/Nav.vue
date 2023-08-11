@@ -18,7 +18,7 @@
     </div>
     <img class="nav__presented-by" src="~/assets/img/presented-by.png" />
     <div class="nav__right">
-      <button class="nav__right__volume-btn">
+      <button class="nav__right__volume-btn" @click="toggleSound">
         <img class="nav__right__volume-btn__img" :src="volumeSrc" />
       </button>
     </div>
@@ -26,14 +26,16 @@
 </template>
 <script>
 export default {
-  data: () => {
-    return {
-      volumeOn: true,
-    };
-  },
   computed: {
     volumeSrc() {
-      return this.volumeOn ? require("~/assets/img/volume-on.png") : "";
+      return !this.$store.state.muted
+        ? require("~/assets/img/volume-on.png")
+        : require("~/assets/img/volume-off.png");
+    },
+  },
+  methods: {
+    toggleSound() {
+      this.$store.commit("setMuted", !this.$store.state.muted);
     },
   },
 };
@@ -83,8 +85,8 @@ export default {
     &__volume-btn {
       cursor: pointer;
 
-      width: 44px;
-      height: 34px;
+      width: 51px;
+      height: 44px;
 
       padding: 0;
 
