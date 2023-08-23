@@ -75,9 +75,13 @@ export default {
     width: 76%;
 
     &__title-img {
-      width: 58%;
+      width: 88%;
       transition: opacity var(--fade-time);
       opacity: 0;
+
+      @include desktop {
+        width: 58%;
+      }
 
       &.fading-in {
         opacity: 1;

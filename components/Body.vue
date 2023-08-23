@@ -189,7 +189,11 @@ export default {
   display: grid;
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 100%;
-  gap: 69px;
+  gap: 55px;
+
+  @include tablet {
+    gap: 69px;
+  }
 
   .fade-in {
     opacity: 1;
@@ -222,11 +226,19 @@ export default {
       bottom: 0;
       left: 50%;
 
+      font-size: 16px;
       letter-spacing: 3px;
 
       transform: translate3d(-50%, var(--h2-transform), 0);
 
       transition: transform var(--fade-time);
+
+      white-space: nowrap;
+
+      @include tablet {
+        font-size: 30px;
+        margin: 0 0 8px 0;
+      }
 
       &.hidden {
         opacity: 0;
@@ -240,20 +252,18 @@ export default {
         opacity: 1;
         transition: opacity var(--fade-time-short);
       }
-
-      @include tablet {
-        font-size: 30px;
-        margin: 0 0 8px 0;
-      }
     }
 
     h1 {
       opacity: 0;
+      font-size: 30px;
+      line-height: 35px;
+      margin: 0;
+
       @include tablet {
         font-size: 60px;
         letter-spacing: 4px;
-
-        margin: 0;
+        line-height: 65px;
       }
     }
   }
@@ -263,12 +273,16 @@ export default {
     width: 100%;
 
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: space-between;
     opacity: 0;
 
     align-self: flex-start;
+
+    @include tablet {
+      flex-direction: row;
+    }
 
     .quiz-body__answers__answer:not(.no-hover):hover {
       color: var(--color-emerald);
@@ -280,8 +294,17 @@ export default {
       text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
         0px -2px 19px rgba(255, 120, 255, 0.6);
 
-      flex: 1 0 50%;
+      flex: 0 0 60px;
+      width: 100%;
+
+      @include tablet {
+        flex: 1 0 50% - 17.5;
+        width: auto;
+      }
+
       &--yes {
+        margin: 0 0 20px 0;
+
         @include tablet {
           margin: 0 35px 0 0;
         }
@@ -289,7 +312,17 @@ export default {
     }
 
     .answer-btn {
+      font-size: 16px;
+
       @include tablet {
+        font-size: 18px;
+      }
+
+      @media screen and (min-width: 1100px) {
+        font-size: 25px;
+      }
+
+      @media screen and (min-width: 1300px) {
         font-size: 30px;
       }
     }

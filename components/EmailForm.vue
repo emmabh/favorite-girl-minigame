@@ -146,16 +146,34 @@ export default {
     }
 
     .email-form__submit-btn {
+      position: relative;
       border: none;
       outline: none;
       background-color: transparent;
 
       color: var(--color-emerald);
 
+      padding: 0;
+
       cursor: pointer;
+
+      width: 20px;
+      height: 18px;
+
+      @include tablet {
+        width: 27px;
+        height: 24px;
+        object-fit: fill;
+      }
 
       &:hover {
         color: var(--color-white);
+      }
+
+      svg {
+        position: relative;
+        width: 100%;
+        height: 100%;
       }
     }
   }

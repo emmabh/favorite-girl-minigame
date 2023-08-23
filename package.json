@@ -29,7 +29,7 @@
     "email-validator": "^2.0.4",
     "google-libphonenumber": "^3.2.26",
     "howler": "^2.2.3",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "2.6.1",
     "normalize.css": "^8.0.1",
     "nuxt": "^2.15.8",
     "nuxt-buefy": "^0.3.31",

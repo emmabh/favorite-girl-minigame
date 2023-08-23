@@ -25,7 +25,10 @@
   </div>
 </template>
 <script>
+import { BreakPointMixin } from "~/assets/js/mixins/breakpoints";
+
 export default {
+  mixins: [BreakPointMixin],
   computed: {
     volumeSrc() {
       return !this.$store.state.muted
@@ -46,22 +49,41 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin: 24px 30px;
 
+  @include tablet {
+    justify-content: space-between;
+  }
+
   &__left {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
+
+    @include tablet {
+      position: relative;
+      top: auto;
+      left: auto;
+    }
 
     &__ig {
       margin: 0 13px 0 0;
       cursor: pointer;
 
       &__img {
-        width: 39px;
-        height: 39px;
+        width: 30px;
+        height: 30px;
+
+        @include tablet {
+          width: 39px;
+          height: 39px;
+        }
       }
     }
 
@@ -69,30 +91,51 @@ export default {
       cursor: pointer;
 
       &__img {
-        width: 42px;
-        height: 41px;
+        width: 30px;
+        height: 29px;
+
+        @include tablet {
+          width: 42px;
+          height: 41px;
+        }
       }
     }
   }
 
   &__presented-by {
+    width: 78%;
+
     @include tablet {
       width: 532px;
     }
   }
 
   &__right {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+
+    @include tablet {
+      position: relative;
+      top: auto;
+      left: auto;
+    }
     &__volume-btn {
       cursor: pointer;
 
-      width: 51px;
-      height: 44px;
+      width: 35px;
+      height: 30px;
 
       padding: 0;
 
       outline: none;
       border: none;
       background-color: transparent;
+
+      @include tablet {
+        width: 51px;
+        height: 44px;
+      }
 
       &__img {
         width: 100%;

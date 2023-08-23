@@ -102,8 +102,8 @@ export default {
       {
         src: `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`
       },
-      { src: "/js/snap.js" }
-      // { src: "/js/recaptcha.js" } // Have to add key in file too
+      { src: "/js/snap.js" },
+      { src: "/js/recaptcha.js" } // Have to add key in file too
     ]
   },
   /*

@@ -13,13 +13,23 @@ export default {};
 
   background-color: transparent;
   outline: none;
+  border-radius: 20px;
+  padding: 0px 10px;
 
-  border-radius: 27px;
-  border: 5px solid var(--color-white);
+  border: 3px solid var(--color-white);
 
   cursor: pointer;
 
-  padding: 20px;
+  @include tablet {
+    border: 5px solid var(--color-white);
+    padding: 20px;
+    border-radius: 27px;
+    height: 70px;
+  }
+
+  @media screen and (min-width: 1100px) {
+    height: 84px;
+  }
 
   &.no-hover {
     cursor: auto;

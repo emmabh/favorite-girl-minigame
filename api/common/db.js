@@ -6,7 +6,7 @@ config.update({ region: "us-east-1" });
 const dynamoDb = new DynamoDB.DocumentClient();
 
 const TABLE = {
-  MAIN: "service-main"
+  MAIN: "favorite-girl-minigame-questions"
 };
 
 const isObject = obj => {
