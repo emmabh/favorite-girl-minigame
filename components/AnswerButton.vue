@@ -35,8 +35,13 @@ export default {};
     cursor: auto;
   }
 
-  &:not(.no-hover):hover {
-    background-color: var(--color-white);
+  @media (hover: hover) {
+    &:not(.no-hover):hover {
+      @media (hover: hover) {
+        background-color: var(--color-white);
+        -webkit-tap-highlight-color: transparent;
+      }
+    }
   }
 }
 </style>

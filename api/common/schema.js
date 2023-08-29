@@ -1,5 +1,5 @@
 const { isValidEmailAddress } = require("./validation");
-const { KLAVIYO_LISTS } = require("./data");
+const { KLAVIYO_LISTS, ERROR } = require("./data");
 
 const SubscribeToListSchema = [
     {
@@ -12,7 +12,7 @@ const SubscribeToListSchema = [
                 return "missing"
             }
 
-            return "Invalid email"
+            return ERROR.INVALID_EMAIL
         }
     },
     {

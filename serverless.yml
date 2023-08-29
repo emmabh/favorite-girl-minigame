@@ -27,14 +27,15 @@ functions:
           method: post
           path: subscribeToList
           cors: true
-    handler: index.subscribeToList
+    handler: api/index.subscribeToList
+
   postAnswer:
     events:
       - http:
           method: post
           path: answer
           cors: true
-    handler: index.postAnswer
+    handler: api/index.postAnswer
 
 resources:
   Resources:

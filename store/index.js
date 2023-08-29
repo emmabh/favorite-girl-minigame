@@ -8,6 +8,8 @@ export const state = () => {
     currentQuestionIndex: 0,
     muted: false,
     quizState: "",
+    currentPeopleFailedPercentage: 0,
+    currentPeopleSucceededPercentage: 0,
     questions: [
       {
         id: 1,
@@ -82,6 +84,15 @@ export const mutations = {
   },
   setMuted(state, val) {
     state.muted = val;
+  },
+  setCurrentPeopleFailedPercentage(state, val) {
+    state.currentPeopleFailedPercentage = val;
+  },
+  setCurrentPeopleSucceededPercentage(state, val) {
+    state.currentPeopleSucceededPercentage = val;
+  },
+  setQuizState(state, val) {
+    state.quizState = val;
   }
 };
 
@@ -89,10 +100,16 @@ export const getters = {
   api: state => path => {
     return `${state.endpoint}${path}`;
   },
-  postResponse: (state, getters) => (id, response) => {
-    return fetch(getters.api("/response"), {
+  postResponse: (state, getters) => (id, answeredYes, recaptcha) => {
+    return fetch(getters.api("/answer"), {
       method: "POST",
-      body: JSON.stringify({ id, response })
+      body: JSON.stringify({ id, answeredYes, recaptcha })
+    });
+  },
+  subscribeToList: (state, getters) => (email, recaptcha, id = "general") => {
+    return fetch(getters.api("/subscribeToList"), {
+      method: "POST",
+      body: JSON.stringify({ email, id, recaptcha })
     });
   }
   // post: (state, getters) => data => {

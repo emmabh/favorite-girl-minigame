@@ -5182,6 +5182,11 @@ dot-qs@0.2.0:
   resolved "https://registry.yarnpkg.com/dot-qs/-/dot-qs-0.2.0.tgz#d36517fe24b7cda61fce7a5026a0024afaf5a439"
   integrity sha1-02UX/iS3zaYfznpQJqACSvr1pDk=
 
+dotenv-expand@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-10.0.0.tgz#12605d00fb0af6d0a592e6558585784032e4ef37"
+  integrity sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==
+
 dotenv-expand@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-5.1.0.tgz#3fbaf020bfd794884072ea26b1e9791d45a629f0"
@@ -5191,6 +5196,11 @@ dotenv@^10.0.0:
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
   integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
+
+dotenv@^16.0.3:
+  version "16.3.1"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.3.1.tgz#369034de7d7e5b120972693352a3bf112172cc3e"
+  integrity sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==
 
 dotenv@^8.2.0:
   version "8.6.0"
@@ -12277,14 +12287,14 @@ server-destroy@^1.0.1:
   resolved "https://registry.yarnpkg.com/server-destroy/-/server-destroy-1.0.1.tgz#f13bf928e42b9c3e79383e61cc3998b5d14e6cdd"
   integrity sha1-8Tv5KOQrnD55OD5hzDmYtdFObN0=
 
-serverless-dotenv-plugin@^3.9.0:
-  version "3.12.2"
-  resolved "https://registry.yarnpkg.com/serverless-dotenv-plugin/-/serverless-dotenv-plugin-3.12.2.tgz#e3f70ba706f3525d4d838114ccdcedb22e1bf13e"
-  integrity sha512-uyukgQkZCWu+Kee+E0XQEmPlMWHHEEN+T9Kp+77VwZx4B3nfjIwd6rEyi5hCiqk1+RqBMc9NME3NP94b04dQFg==
+serverless-dotenv-plugin@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/serverless-dotenv-plugin/-/serverless-dotenv-plugin-6.0.0.tgz#c3e0c2e7fb79641433497085eecc30fe150b5ca0"
+  integrity sha512-8tLVNwHfDO0sBz6+m+DLTZquRk0AZq9rzqk3kphm1iIWKfan9R7RKt4hdq3eQ0kmDoqzudjPYBEXAJ5bUNKeGQ==
   dependencies:
     chalk "^4.1.2"
-    dotenv "^10.0.0"
-    dotenv-expand "^5.1.0"
+    dotenv "^16.0.3"
+    dotenv-expand "^10.0.0"
 
 serverless-offline@^7.0.0:
   version "7.1.0"
@@ -12332,6 +12342,13 @@ serverless-plugin-include-dependencies@^5.0.0:
     require-package-name "^2.0.1"
     resolve "^1.15.0"
     semver "^7.1.1"
+
+serverless-prune-plugin@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/serverless-prune-plugin/-/serverless-prune-plugin-2.0.2.tgz#803fb5450a17775ab7cb7912da94d9b64ae81b78"
+  integrity sha512-tW1Q8MAVmhW8KQN+e0AsSVsb9nmRWWj28xBjMwvVC3FbammmtUJT+5nRpmjxJZ6/K/j3OV1Rx8b32md71BwkYQ==
+  dependencies:
+    bluebird "^3.7.2"
 
 serverless@^2.51.2:
   version "2.70.0"

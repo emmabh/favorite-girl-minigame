@@ -2,9 +2,10 @@ const { wrap } = require("./wrap");
 const { SubscribeToListSchema, PostAnswerSchema } = require("./common/schema");
 const { validateSchema } = require("./common/validation");
 const { subscribeToEmailList } = require("./common/klaviyo");
-const { KLAVIYO_LISTS } = require("./common/data");
-const { verifyRecaptcha } = require("./utilities");
+const { KLAVIYO_LISTS, ERROR } = require("./common/data");
+const { verifyRecaptcha, retrieveUserSourceIp } = require("./utilities");
 const { getDbItem, TABLE, updateDbItem } = require("./common/db");
+
 
 const subscribeToList = wrap(async (event, context) => {
   const data = JSON.parse(event.body);
@@ -19,7 +20,7 @@ const subscribeToList = wrap(async (event, context) => {
     };
   }
 
-  const { id, email } = data;
+  const { id, email, recaptcha } = data;
 
   const ipAddress = retrieveUserSourceIp(event);
   const verified = await verifyRecaptcha(
@@ -42,7 +43,7 @@ const subscribeToList = wrap(async (event, context) => {
     };
   }
 
-  const individualResp = await subscribeToEmailList(KLAVIYO_LISTS[id], { profiles: [{ email, "msf_drop_id": id }] })
+  const individualResp = await subscribeToEmailList(KLAVIYO_LISTS[id], { profiles: [{ email, "origin": "favorite-girl-minigame" }] })
     .then((resp) => {
       if (resp.status != 200) {
         return Promise.reject(resp);
@@ -69,7 +70,7 @@ const subscribeToList = wrap(async (event, context) => {
               errors: [
                 {
                   key: "email",
-                  message: "Invalid email"
+                  message: ERROR.INVALID_EMAIL
                 }
               ]
             }
@@ -94,64 +95,8 @@ const subscribeToList = wrap(async (event, context) => {
         ]
       }
     }
-  } else if (individualResp.statusCode != 200) {
-    return individualResp;
-  }
-
-  const resp = await subscribeToEmailList("VThq9s", { profiles: [{ email, "msf_drop_id": id }] })
-    .then((resp) => {
-      if (resp.status != 200) {
-        return Promise.reject(resp);
-      } else {
-        return resp;
-      }
-    })
-    .then(async (resp) => await resp.json())
-    .then((obj) => {
-      return {
-        statusCode: 200,
-        body: obj.length > 0 ? obj[0] : {}
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      if (err.status == 400) {
-        const { detail } = err.json();
-        console.error(detail);
-        if (detail.includes("not a valid email")) {
-          return {
-            statusCode: 400,
-            body: {
-              errors: [
-                {
-                  key: "email",
-                  message: "Invalid email"
-                }
-              ]
-            }
-          }
-        } else {
-          return null;
-        }
-      } else {
-        return null;
-      }
-    });
-
-  if (!resp) {
-    return {
-      statusCode: 500,
-      body: {
-        errors: [
-          {
-            key: "",
-            message: "Server error"
-          }
-        ]
-      }
-    }
   } else {
-    return resp;
+    return individualResp;
   }
 });
 
@@ -168,7 +113,7 @@ const postAnswer = wrap(async (event, context) => {
     };
   }
 
-  const { id, answeredYes } = data;
+  const { id, answeredYes, recaptcha } = data;
 
   const ipAddress = retrieveUserSourceIp(event);
   const verified = await verifyRecaptcha(
@@ -226,7 +171,7 @@ const postAnswer = wrap(async (event, context) => {
     updatedQuestionData.no = updatedQuestionData.no + 1;
   }
 
-  const resp = await updateDbItem({ id }, finalData, TABLE.MAIN);
+  const resp = await updateDbItem({ id }, updatedQuestionData, TABLE.MAIN);
 
   return {
     statusCode: 200,

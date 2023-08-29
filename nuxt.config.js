@@ -121,7 +121,7 @@ export default {
     GA_ID,
     endpoint: process.env.LOCAL
       ? "http://localhost:3001/dev"
-      : "https://amazonaws.com/dev",
+      : "https://tfsl1kxlok.execute-api.us-east-1.amazonaws.com/dev",
     recaptcha: process.env.RECAPTCHA_KEY,
     PROJECT_DOMAIN: process.env.LOCAL ? "http://localhost:3000" : PROJECT_DOMAIN
   },

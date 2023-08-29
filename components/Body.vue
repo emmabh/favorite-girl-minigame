@@ -9,27 +9,42 @@
   >
     <div class="quiz-body__question">
       <h2 class="hidden">WOULD YOU...</h2>
-      <h2 ref="h2">WOULD YOU...</h2>
+      <transition name="fade">
+        <h2 v-if="!$store.state.quizState" ref="h2">WOULD YOU...</h2>
+      </transition>
       <h1 ref="largetext" :class="fadeClass">{{ largeText }}</h1>
     </div>
     <progress-bar :progress="progress" />
-    <div class="quiz-body__answers" :class="fadeClass">
-      <answer-button
-        class="quiz-body__answers__answer quiz-body__answers__answer--yes"
-        :class="{ 'no-hover': showEmailForm }"
-        @selected="answerSelected(ANSWER_OPTIONS.YES)"
+    <transition name="fade">
+      <div
+        v-if="!$store.state.quizState"
+        class="quiz-body__answers"
+        :class="fadeClass"
       >
-        <div v-if="!showEmailForm">
-          {{ yesAnswer }}
-        </div>
-        <email-form v-else @success="emailSubmittedSuccessfully" />
-      </answer-button>
-      <answer-button
-        class="quiz-body__answers__answer quiz-body__answers__answer--no"
-        @selected="answerSelected(ANSWER_OPTIONS.NO)"
-      >
-        {{ noAnswer }}
-      </answer-button>
+        <answer-button
+          class="quiz-body__answers__answer quiz-body__answers__answer--yes"
+          :class="{ 'no-hover': showEmailForm }"
+          @selected="answerSelected(ANSWER_OPTIONS.YES)"
+        >
+          <div v-if="!showEmailForm">
+            {{ yesAnswer }}
+          </div>
+          <email-form v-else @success="emailSubmittedSuccessfully" />
+        </answer-button>
+        <answer-button
+          class="quiz-body__answers__answer quiz-body__answers__answer--no"
+          @selected="answerSelected(ANSWER_OPTIONS.NO)"
+        >
+          {{ noAnswer }}
+        </answer-button>
+      </div>
+    </transition>
+    <div
+      :class="fadeClass"
+      v-if="$store.state.quizState"
+      class="quiz-body__comparison-text"
+    >
+      {{ subText }}
     </div>
   </div>
 </template>
@@ -39,12 +54,14 @@ import AnswerButton from "./AnswerButton.vue";
 import EmailForm from "./EmailForm.vue";
 import ProgressBar from "./ProgressBar.vue";
 import { Howl, Howler } from "howler";
+import { CaptchaMixin } from "~/assets/js/mixins/recaptcha";
 
 const FADE_CLASSES = {
   FADE_IN: "fade-in",
   FADE_OUT: "fade-out",
 };
 export default {
+  mixins: [CaptchaMixin],
   transition: "fade",
   components: { ProgressBar, AnswerButton, EmailForm },
   props: {
@@ -79,10 +96,12 @@ export default {
       fadeClass: "",
       fadeTimeSeconds: 2,
       fadeHoldTimeSeconds: 2,
+      finalStateHoldTimeSeconds: 5,
       h2Transform: 0,
       unlisten: [],
       loserSound,
       winnerSound,
+      numberOfNos: 0,
     };
   },
   computed: {
@@ -93,6 +112,15 @@ export default {
         return "congrats! you achieved your dream!";
       } else {
         return this.question;
+      }
+    },
+    subText() {
+      if (this.$store.state.quizState == QUIZ_STATES.FAILED) {
+        return `${this.$store.state.currentPeopleSucceededPercentage}% of people surpassed you`;
+      } else if (this.$store.state.quizState == QUIZ_STATES.PASSED) {
+        return `${this.$store.state.currentPeopleFailedPercentage}% of people failed behind you`;
+      } else {
+        return "";
       }
     },
     id() {
@@ -112,8 +140,52 @@ export default {
     },
   },
   methods: {
-    answerSelected(answer) {
+    async answerSelected(answer) {
       if (!this.showEmailForm) {
+        // NB: Submit answer
+        const recaptcha = await this.getRecaptcha();
+        if (recaptcha) {
+          console.log(this.id);
+          const answeredYes = answer == ANSWER_OPTIONS.YES;
+          const resp = await this.$store.getters
+            .postResponse(this.id, answeredYes, recaptcha)
+            .then((resp) => resp.json())
+            .catch((err) => {
+              console.log(err);
+              return {
+                no: 26,
+                yes: 54,
+              };
+            });
+
+          var finalResp = resp;
+          if (resp.errors) {
+            finalResp = {
+              no: 26,
+              yes: 54,
+            };
+          }
+
+          this.numberOfNos = this.numberOfNos + finalResp.no;
+          const currentFailedPercentage =
+            Math.ceil(
+              ((this.numberOfNos / (finalResp.yes + this.numberOfNos)) * 100) /
+                10
+            ) * 10;
+          this.$store.commit(
+            "setCurrentPeopleFailedPercentage",
+            currentFailedPercentage
+          );
+
+          const currentSucceededPercentage =
+            Math.ceil(
+              ((finalResp.yes / (finalResp.yes + finalResp.no)) * 100) / 10
+            ) * 10;
+          this.$store.commit(
+            "setCurrentPeopleSucceededPercentage",
+            currentSucceededPercentage
+          );
+        }
         if (answer == ANSWER_OPTIONS.YES) {
           if (this.index == 0) {
             // NB: Show email form
@@ -134,12 +206,13 @@ export default {
                 this.fadeClass = FADE_CLASSES.FADE_IN;
               }, this.fadeTimeSeconds * 1000 + this.fadeHoldTimeSeconds * 1000);
             } else {
-              // TODO: WINNER STATE
+              this.triggerSuccess();
             }
           }
         } else {
           // TODO: failed state
           this.loserSound.play();
+          this.triggerFailure();
         }
       }
     },
@@ -161,13 +234,46 @@ export default {
       }, this.fadeTimeSeconds * 1000 + this.fadeHoldTimeSeconds * 1000);
     },
     updateH2Transform() {
-      const h2Dims = this.$refs.h2.getBoundingClientRect();
-      const textDims = this.$refs.largetext.getBoundingClientRect();
+      if (!this.$store.state.quizState) {
+        const h2Dims = this.$refs.h2.getBoundingClientRect();
+        const textDims = this.$refs.largetext.getBoundingClientRect();
 
-      const h2Height = h2Dims.height;
-      const textHeight = textDims.height;
+        const h2Height = h2Dims.height;
+        const textHeight = textDims.height;
 
-      this.h2Transform = -1 * (textHeight / h2Height) * 100;
+        this.h2Transform = -1 * (textHeight / h2Height) * 100;
+      }
+    },
+    triggerFailure() {
+      this.fadeClass = FADE_CLASSES.FADE_OUT;
+      setTimeout(() => {
+        this.$store.commit("setQuizState", QUIZ_STATES.FAILED);
+      }, this.fadeTimeSeconds * 1000);
+
+      setTimeout(() => {
+        this.showEmailForm = false;
+        this.fadeClass = FADE_CLASSES.FADE_IN;
+      }, this.fadeTimeSeconds * 1000 + this.fadeHoldTimeSeconds * 1000);
+
+      setTimeout(() => {
+        this.$emit("dismiss");
+      }, this.fadeTimeSeconds * 1000 + this.fadeHoldTimeSeconds * 1000 + this.finalStateHoldTimeSeconds * 1000);
+    },
+    triggerSuccess() {
+      this.fadeClass = FADE_CLASSES.FADE_OUT;
+      setTimeout(() => {
+        this.$store.commit("setQuizState", QUIZ_STATES.PASSED);
+        this.$store.commit("setCurrentQuestionIndex", this.index + 1);
+      }, this.fadeTimeSeconds * 1000);
+
+      setTimeout(() => {
+        this.showEmailForm = false;
+        this.fadeClass = FADE_CLASSES.FADE_IN;
+      }, this.fadeTimeSeconds * 1000 + this.fadeHoldTimeSeconds * 1000);
+
+      setTimeout(() => {
+        this.$emit("dismiss");
+      }, this.fadeTimeSeconds * 1000 + this.fadeHoldTimeSeconds * 1000 + this.finalStateHoldTimeSeconds * 1000);
     },
   },
   mounted() {
@@ -284,9 +390,11 @@ export default {
       flex-direction: row;
     }
 
-    .quiz-body__answers__answer:not(.no-hover):hover {
-      color: var(--color-emerald);
-      text-shadow: none;
+    @media (hover: hover) {
+      .quiz-body__answers__answer:not(.no-hover):hover {
+        color: var(--color-emerald);
+        text-shadow: none;
+      }
     }
 
     &__answer {
@@ -325,6 +433,26 @@ export default {
       @media screen and (min-width: 1300px) {
         font-size: 30px;
       }
+    }
+  }
+
+  &__comparison-text {
+    position: relative;
+    text-align: center;
+    color: var(--color-white);
+    text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
+      0px -2px 19px rgba(255, 120, 255, 0.6);
+
+    font-size: 16px;
+
+    align-self: flex-start;
+
+    @include tablet {
+      font-size: 30px;
+    }
+
+    @include desktop {
+      font-size: 40px;
     }
   }
 

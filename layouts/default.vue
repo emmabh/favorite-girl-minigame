@@ -143,4 +143,8 @@ body {
 img {
   max-width: 100%;
 }
+
+.grecaptcha-badge {
+  visibility: hidden;
+}
 </style>

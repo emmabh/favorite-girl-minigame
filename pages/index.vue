@@ -7,7 +7,12 @@
         src="~/assets/img/chrome-title.png"
         v-if="!$store.state.quizInProgress"
       />
-      <Body v-if="$store.state.quizInProgress" :index="currentQuestionIndex" />
+      <Body
+        v-if="$store.state.quizInProgress"
+        :index="currentQuestionIndex"
+        @dismiss="dismissQuiz"
+      />
+      <Results v-if="showResults" />
     </div>
     <Nav />
   </div>
@@ -15,12 +20,14 @@
 
 <script>
 import Body from "~/components/Body.vue";
+import Results from "~/components/Results.vue";
 import Nav from "../components/Nav.vue";
 
 export default {
   components: {
     Nav,
     Body,
+    Results,
   },
   data: () => {
     return {
@@ -28,6 +35,7 @@ export default {
       fadingTimeSeconds: 1,
       fadingHoldTimeSeconds: 3,
       titleClass: "",
+      showResults: false,
     };
   },
   computed: {
@@ -47,6 +55,12 @@ export default {
     setTimeout(() => {
       this.$store.commit("setQuizInProgress", true);
     }, this.introWaitTimeSeconds * 1000 + this.fadingHoldTimeSeconds * 1000 + this.fadingTimeSeconds * 1000);
+  },
+  methods: {
+    dismissQuiz() {
+      this.showResults = true;
+      this.$store.commit("setQuizInProgress", false);
+    },
   },
 };
 </script>
@@ -90,6 +104,13 @@ export default {
       &.fading-out {
         opacity: 0;
       }
+    }
+
+    .results {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0);
     }
   }
 

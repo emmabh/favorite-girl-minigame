@@ -2,7 +2,7 @@
   if (document.getElementById("recaptcha")) {
     return;
   }
-  const KEY = null;
+  const KEY = "6LdSZ8QnAAAAAPFHWrpFkXoGkC0CaDFtOd6xtWW1";
 
   s = r.getElementsByTagName("head")[0];
   f = r.createElement("script");

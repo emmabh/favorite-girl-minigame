@@ -2,12 +2,22 @@
   <div class="email-form">
     <form @submit="onSubmit">
       <input
+        v-if="!success"
         class="email-form__input"
         :value="email"
         placeholder="you@example.com"
         type="text"
+        name="email"
+        :disabled="busy || success"
       />
-      <button class="email-form__submit-btn"><Arrow /></button>
+      <span v-else>SUCCESS</span>
+      <button
+        v-if="!success"
+        :disabled="busy || success"
+        class="email-form__submit-btn"
+      >
+        <Arrow />
+      </button>
     </form>
     <div v-if="error" class="email-form__error">
       {{ error }}
@@ -28,11 +38,13 @@ const ERROR = {
   INTERNAL_LIST: `subscriptions/remove-from-list-failed`,
   INVALID_ACTION: `subscriptions/invalid-action`,
   INVALID_EMAIL: `frontend/invalid-email`,
+  DEFAULT: `frontend/default`,
 };
 
 const ERROR_MESSAGE = {
   [ERROR.INVALID_REQUEST]: `Make sure you e-mail is filled out`,
   [ERROR.INVALID_EMAIL]: `Please input a valid e-mail`,
+  [ERROR.DEFAULT]: `Please try again`,
 };
 
 /**
@@ -61,7 +73,7 @@ export default {
       error: null,
       busy: false,
       success: false,
-      listId: "TODO",
+      defaultError: `Please try again`,
     };
   },
   watch: {
@@ -77,41 +89,49 @@ export default {
     async onSubmit(e) {
       // TODO: Submit email
       e.preventDefault();
-      this.success = true;
 
-      //   if (this.busy) {
-      //     return;
-      //   }
+      if (this.busy) {
+        return;
+      }
 
-      //   const formData = formToObject(e.target);
+      const formData = formToObject(e.target);
 
-      //   this.error = null;
+      this.error = null;
 
-      //   try {
-      //     const recaptcha = await this.getRecaptcha();
+      try {
+        const recaptcha = await this.getRecaptcha();
 
-      //     const submitData = {
-      //       ...formData,
-      //       recaptcha,
-      //       id: this.listId,
-      //     };
+        if (!recaptcha) {
+          throw new Error(ERROR.DEFAULT);
+        }
 
-      //     this.busy = true;
-      //     if (!validate(submitData.email)) {
-      //       throw new Error(ERROR.INVALID_EMAIL);
-      //     }
+        const submitData = {
+          ...formData,
+          recaptcha,
+        };
 
-      //     const resp = await fetch(this.$store.getters.api("/subscribe"), {
-      //       method: "POST",
-      //       body: JSON.stringify(submitData),
-      //     }).then((resp) => resp.json());
+        this.busy = true;
+        console.log(submitData.email);
+        if (!validate(submitData.email)) {
+          throw new Error(ERROR.INVALID_EMAIL);
+        }
 
-      //     this.success = true;
-      //   } catch (e) {
-      //     this.addError(getErrorMessage(e.message, this.defaultError));
-      //   } finally {
-      //     this.busy = false;
-      //   }
+        const resp = await this.$store.getters
+          .subscribeToList(submitData.email, recaptcha)
+          .then((resp) => resp.json());
+
+        if (resp.errors) {
+          this.addError(
+            getErrorMessage(resp.errors[0].message, this.defaultError)
+          );
+        } else {
+          this.success = true;
+        }
+      } catch (e) {
+        this.addError(getErrorMessage(e.message, this.defaultError));
+      } finally {
+        this.busy = false;
+      }
     },
     addError(msg) {
       this.error = msg;
@@ -175,6 +195,30 @@ export default {
         width: 100%;
         height: 100%;
       }
+    }
+  }
+
+  &__error {
+    position: absolute;
+    color: red;
+    text-align: center;
+
+    margin-top: 110px;
+
+    width: calc(100% - 32px);
+
+    @include tablet {
+      position: relative;
+      width: auto;
+
+      font-size: 16px;
+      text-align: left;
+
+      margin-top: 30px;
+    }
+
+    @include desktop {
+      font-size: 20px;
     }
   }
 }
