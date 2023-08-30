@@ -5,14 +5,22 @@
         :class="titleClass"
         class="body__title-img"
         src="~/assets/img/chrome-title.png"
-        v-if="!$store.state.quizInProgress"
+        v-if="
+          !$store.state.quizInProgress &&
+          !showResults &&
+          !this.$store.state.quizState
+        "
       />
-      <Body
-        v-if="$store.state.quizInProgress"
-        :index="currentQuestionIndex"
-        @dismiss="dismissQuiz"
-      />
-      <Results v-if="showResults" />
+      <Transition name="fade">
+        <Body
+          v-if="$store.state.quizInProgress"
+          :index="currentQuestionIndex"
+          @dismiss="dismissQuiz"
+        />
+      </Transition>
+      <Transition name="fade">
+        <Results v-if="showResults" />
+      </Transition>
     </div>
     <Nav />
   </div>
@@ -58,8 +66,11 @@ export default {
   },
   methods: {
     dismissQuiz() {
-      this.showResults = true;
       this.$store.commit("setQuizInProgress", false);
+
+      setTimeout(() => {
+        this.showResults = true;
+      }, this.fadingHoldTimeSeconds + 2 * 1000);
     },
   },
 };
@@ -80,6 +91,8 @@ export default {
   align-items: center;
   justify-content: center;
 
+  overflow: hidden;
+
   .body {
     display: flex;
     flex-direction: column;
@@ -94,7 +107,7 @@ export default {
       opacity: 0;
 
       @include desktop {
-        width: 58%;
+        width: 80%;
       }
 
       &.fading-in {
@@ -117,6 +130,20 @@ export default {
   .nav {
     position: absolute;
     bottom: 0;
+    left: 0;
   }
+}
+
+.fade {
+  opacity: 1;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 2s !important;
+}
+
+.fade-enter-from, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

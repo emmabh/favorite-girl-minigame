@@ -10,7 +10,7 @@
         name="email"
         :disabled="busy || success"
       />
-      <span v-else>SUCCESS</span>
+      <span class="success" v-else>success</span>
       <button
         v-if="!success"
         :disabled="busy || success"
@@ -141,6 +141,22 @@ export default {
 </script>
 <style lang="scss" scoped>
 .email-form {
+  .success {
+    font-size: 16px;
+
+    @include tablet {
+      font-size: 18px;
+    }
+
+    @media screen and (min-width: 1100px) {
+      font-size: 25px;
+    }
+
+    @media screen and (min-width: 1300px) {
+      font-size: 30px;
+    }
+  }
+
   form {
     display: flex;
     flex-direction: row;

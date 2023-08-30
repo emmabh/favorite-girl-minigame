@@ -44,7 +44,7 @@ export default {
   --color-emerald: #003936;
 
   --color-text: var(--color-black);
-  --color-bg: var(--color-white);
+  --color-bg: var(--color-emerald);
 
   --font-size-x-small: 10px;
   --font-size-small: 12px;

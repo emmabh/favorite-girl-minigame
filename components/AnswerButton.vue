@@ -1,10 +1,17 @@
 <template>
-  <button class="answer-btn" @click="$emit('selected')">
+  <button class="answer-btn" @click="$emit('selected')" :class="{ selected }">
     <slot />
   </button>
 </template>
 <script>
-export default {};
+export default {
+  props: {
+    selected: {
+      default: false,
+      type: Boolean,
+    },
+  },
+};
 </script>
 <style lang="scss">
 .answer-btn {
@@ -35,9 +42,22 @@ export default {};
     cursor: auto;
   }
 
+  &.disabled {
+    pointer-events: none;
+    cursor: auto;
+  }
+
+  &.selected {
+    color: var(--color-emerald) !important;
+    text-shadow: none !important;
+    background-color: var(--color-white);
+  }
+
   @media (hover: hover) {
-    &:not(.no-hover):hover {
+    &:not(.no-hover):not(.disabled):hover {
       @media (hover: hover) {
+        color: var(--color-emerald);
+        text-shadow: none;
         background-color: var(--color-white);
         -webkit-tap-highlight-color: transparent;
       }

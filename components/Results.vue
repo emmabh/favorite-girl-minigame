@@ -124,13 +124,13 @@ export default {
   grid-auto-rows: auto 60px minmax(0, 1fr);
 
   @include desktop {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto auto;
     grid-template-rows: 1fr 1fr;
-
     width: 75%;
     height: 73%;
+    max-width: 990px;
 
-    gap: 50px;
+    gap: 30px;
   }
 
   &__text {
@@ -140,17 +140,22 @@ export default {
     font-size: 40px;
     text-align: center;
 
+    text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
+      0px -2px 19px rgba(255, 120, 255, 0.7);
+
+    letter-spacing: 2px;
+
     @include desktop {
       grid-row-start: 1;
       grid-row-end: 1;
       grid-column-start: 1;
       grid-column-end: 1;
 
-      text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
-        0px -2px 19px rgba(255, 120, 255, 0.6);
       text-align: left;
 
       align-items: flex-end;
+
+      max-width: 600px;
     }
   }
 
@@ -217,6 +222,13 @@ export default {
       height: 100%;
       width: auto;
       object-fit: contain;
+
+      box-shadow: 0px 0px 93px 27px rgba(0, 0, 0, 0.5);
+
+      @include desktop {
+        // min-width: 400px;
+        object-fit: auto;
+      }
     }
   }
 }

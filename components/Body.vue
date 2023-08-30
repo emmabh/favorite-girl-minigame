@@ -9,9 +9,11 @@
   >
     <div class="quiz-body__question">
       <h2 class="hidden">WOULD YOU...</h2>
-      <transition name="fade">
-        <h2 v-if="!$store.state.quizState" ref="h2">WOULD YOU...</h2>
-      </transition>
+      <Transition name="fade">
+        <h2 v-if="wouldYouShowing" ref="h2" :class="{ nofade: !h2Fade }">
+          WOULD YOU...
+        </h2>
+      </Transition>
       <h1 ref="largetext" :class="fadeClass">{{ largeText }}</h1>
     </div>
     <progress-bar :progress="progress" />
@@ -23,7 +25,11 @@
       >
         <answer-button
           class="quiz-body__answers__answer quiz-body__answers__answer--yes"
-          :class="{ 'no-hover': showEmailForm }"
+          :class="{
+            'no-hover': showEmailForm,
+            disabled: fadeClass == FADE_CLASSES.FADE_OUT,
+          }"
+          :selected="yesSelected"
           @selected="answerSelected(ANSWER_OPTIONS.YES)"
         >
           <div v-if="!showEmailForm">
@@ -33,6 +39,10 @@
         </answer-button>
         <answer-button
           class="quiz-body__answers__answer quiz-body__answers__answer--no"
+          :class="{
+            disabled: fadeClass == FADE_CLASSES.FADE_OUT,
+          }"
+          :selected="noSelected"
           @selected="answerSelected(ANSWER_OPTIONS.NO)"
         >
           {{ noAnswer }}
@@ -90,6 +100,7 @@ export default {
       autoplay: false,
     });
     return {
+      FADE_CLASSES: FADE_CLASSES,
       ANSWER_OPTIONS: ANSWER_OPTIONS,
       showEmailForm: false,
       email: "",
@@ -98,10 +109,14 @@ export default {
       fadeHoldTimeSeconds: 2,
       finalStateHoldTimeSeconds: 5,
       h2Transform: 0,
+      h2Fade: false,
       unlisten: [],
       loserSound,
       winnerSound,
       numberOfNos: 0,
+      wouldYouShowing: true,
+      noSelected: false,
+      yesSelected: false,
     };
   },
   computed: {
@@ -191,6 +206,7 @@ export default {
             // NB: Show email form
             this.showEmailForm = true;
           } else {
+            this.yesSelected = true;
             this.winnerSound.play();
             if (this.index < this.$store.state.questions.length - 1) {
               this.fadeClass = FADE_CLASSES.FADE_OUT;
@@ -199,6 +215,7 @@ export default {
               }, this.fadeTimeSeconds * 1000);
 
               setTimeout(() => {
+                this.yesSelected = false;
                 this.updateH2Transform();
               }, this.fadeTimeSeconds * 1000 + (this.fadeHoldTimeSeconds / 2) * 1000);
 
@@ -213,6 +230,7 @@ export default {
           // TODO: failed state
           this.loserSound.play();
           this.triggerFailure();
+          this.noSelected = true;
         }
       }
     },
@@ -246,6 +264,7 @@ export default {
     },
     triggerFailure() {
       this.fadeClass = FADE_CLASSES.FADE_OUT;
+      this.wouldYouShowing = false;
       setTimeout(() => {
         this.$store.commit("setQuizState", QUIZ_STATES.FAILED);
       }, this.fadeTimeSeconds * 1000);
@@ -261,6 +280,8 @@ export default {
     },
     triggerSuccess() {
       this.fadeClass = FADE_CLASSES.FADE_OUT;
+      this.wouldYouShowing = false;
+
       setTimeout(() => {
         this.$store.commit("setQuizState", QUIZ_STATES.PASSED);
         this.$store.commit("setCurrentQuestionIndex", this.index + 1);
@@ -279,6 +300,10 @@ export default {
   mounted() {
     this.fadeClass = FADE_CLASSES.FADE_IN;
     this.updateH2Transform();
+
+    setTimeout(() => {
+      this.h2Fade = true;
+    }, 1000);
 
     this.unlisten = [onWindowResize(this.updateH2Transform)];
   },
@@ -346,6 +371,10 @@ export default {
         margin: 0 0 8px 0;
       }
 
+      &.nofade {
+        transition: none;
+      }
+
       &.hidden {
         opacity: 0;
         position: relative;
@@ -388,13 +417,6 @@ export default {
 
     @include tablet {
       flex-direction: row;
-    }
-
-    @media (hover: hover) {
-      .quiz-body__answers__answer:not(.no-hover):hover {
-        color: var(--color-emerald);
-        text-shadow: none;
-      }
     }
 
     &__answer {
@@ -447,6 +469,8 @@ export default {
 
     align-self: flex-start;
 
+    letter-spacing: 2px;
+
     @include tablet {
       font-size: 30px;
     }
@@ -471,9 +495,11 @@ export default {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 5s;
+  --other-transition: opacity 5s;
+  transition: opacity 2s !important;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.fade-enter-from, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 </style>
