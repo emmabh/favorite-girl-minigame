@@ -94,6 +94,7 @@ export default {
   overflow: hidden;
 
   .body {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -102,9 +103,11 @@ export default {
     width: 76%;
 
     &__title-img {
-      width: 88%;
+      position: relative;
+      width: 116%;
       transition: opacity var(--fade-time);
       opacity: 0;
+      max-width: none;
 
       @include desktop {
         width: 80%;
