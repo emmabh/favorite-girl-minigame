@@ -477,9 +477,11 @@ export default {
 
     align-self: flex-start;
 
-    letter-spacing: 2px;
+    letter-spacing: 1px;
 
     @include tablet {
+      letter-spacing: 2px;
+
       font-size: 30px;
     }
 
