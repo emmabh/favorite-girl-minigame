@@ -26,6 +26,7 @@ export default {
   border: 3px solid var(--color-white);
 
   cursor: pointer;
+  letter-spacing: 0.5px;
 
   @include tablet {
     border: 5px solid var(--color-white);
@@ -34,7 +35,7 @@ export default {
     height: 70px;
   }
 
-  @media screen and (min-width: 1100px) {
+  @media screen and (min-width: 1130px) {
     height: 84px;
   }
 

@@ -359,7 +359,7 @@ export default {
       left: 50%;
 
       font-size: 16px;
-      letter-spacing: 3px;
+      letter-spacing: 1px;
 
       transform: translate3d(-50%, var(--h2-transform), 0);
 
@@ -368,6 +368,8 @@ export default {
       white-space: nowrap;
 
       @include tablet {
+        letter-spacing: 3px;
+
         font-size: 30px;
         margin: 0 0 8px 0;
       }
@@ -394,6 +396,7 @@ export default {
       opacity: 0;
       font-size: 30px;
       line-height: 35px;
+      letter-spacing: 1px;
       margin: 0;
 
       @include tablet {
@@ -446,14 +449,18 @@ export default {
       font-size: 16px;
 
       @include tablet {
-        font-size: 18px;
+        font-size: 15px;
       }
 
-      @media screen and (min-width: 1100px) {
+      @media screen and (min-width: 1000px) {
+        font-size: 17px;
+      }
+
+      @media screen and (min-width: 1140px) {
         font-size: 25px;
       }
 
-      @media screen and (min-width: 1300px) {
+      @media screen and (min-width: 1320px) {
         font-size: 30px;
       }
     }
