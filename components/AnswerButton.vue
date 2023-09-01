@@ -21,7 +21,7 @@ export default {
   background-color: transparent;
   outline: none;
   border-radius: 20px;
-  padding: 0px 10px;
+  padding: 0px 20px;
 
   border: 3px solid var(--color-white);
 

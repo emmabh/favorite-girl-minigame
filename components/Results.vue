@@ -175,10 +175,6 @@ export default {
       align-items: flex-start;
     }
 
-    &:last-child {
-      margin: 0;
-    }
-
     &__button {
       outline: none;
       background: transparent;
@@ -188,6 +184,10 @@ export default {
       height: 60px;
 
       margin: 0 25px 0 0;
+
+      &:last-child {
+        margin: 0;
+      }
 
       @include desktop {
         height: 60px;
@@ -228,6 +228,9 @@ export default {
       @include desktop {
         // min-width: 400px;
         object-fit: auto;
+
+        height: auto;
+        width: auto;
       }
     }
   }

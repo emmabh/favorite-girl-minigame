@@ -27,7 +27,7 @@
           class="quiz-body__answers__answer quiz-body__answers__answer--yes"
           :class="{
             'no-hover': showEmailForm,
-            disabled: fadeClass == FADE_CLASSES.FADE_OUT,
+            disabled: yesSelected || noSelected,
           }"
           :selected="yesSelected"
           @selected="answerSelected(ANSWER_OPTIONS.YES)"
@@ -40,7 +40,7 @@
         <answer-button
           class="quiz-body__answers__answer quiz-body__answers__answer--no"
           :class="{
-            disabled: fadeClass == FADE_CLASSES.FADE_OUT,
+            disabled: yesSelected || noSelected,
           }"
           :selected="noSelected"
           @selected="answerSelected(ANSWER_OPTIONS.NO)"
@@ -158,6 +158,8 @@ export default {
     async answerSelected(answer) {
       if (!this.showEmailForm) {
         // NB: Submit answer
+        this.yesSelected = answer == ANSWER_OPTIONS.YES;
+        this.noSelected = answer == ANSWER_OPTIONS.NO;
         const recaptcha = await this.getRecaptcha();
         if (recaptcha) {
           console.log(this.id);
@@ -206,7 +208,6 @@ export default {
             // NB: Show email form
             this.showEmailForm = true;
           } else {
-            this.yesSelected = true;
             this.winnerSound.play();
             if (this.index < this.$store.state.questions.length - 1) {
               this.fadeClass = FADE_CLASSES.FADE_OUT;
@@ -230,7 +231,6 @@ export default {
           // TODO: failed state
           this.loserSound.play();
           this.triggerFailure();
-          this.noSelected = true;
         }
       }
     },

@@ -100,6 +100,7 @@ export default {
     align-items: center;
     justify-content: center;
 
+    height: 100%;
     width: 76%;
 
     &__title-img {
@@ -123,10 +124,11 @@ export default {
     }
 
     .results {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate3d(-50%, -50%, 0);
+      position: relative;
+      // position: absolute;
+      // top: 50%;
+      // left: 50%;
+      // transform: translate3d(-50%, -50%, 0);
     }
   }
 
