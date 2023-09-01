@@ -40,7 +40,7 @@
         <answer-button
           class="quiz-body__answers__answer quiz-body__answers__answer--no"
           :class="{
-            disabled: yesSelected || noSelected,
+            disabled: yesSelected || noSelected || showEmailForm,
           }"
           :selected="noSelected"
           @selected="answerSelected(ANSWER_OPTIONS.NO)"
@@ -207,6 +207,7 @@ export default {
           if (this.index == 0) {
             // NB: Show email form
             this.showEmailForm = true;
+            this.yesSelected = false;
           } else {
             this.winnerSound.play();
             if (this.index < this.$store.state.questions.length - 1) {
