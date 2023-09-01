@@ -143,7 +143,7 @@ export default {
     text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
       0px -2px 19px rgba(255, 120, 255, 0.7);
 
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
 
     @include desktop {
       grid-row-start: 1;
@@ -156,6 +156,7 @@ export default {
       align-items: flex-end;
 
       max-width: 600px;
+      letter-spacing: 2px;
     }
   }
 
