@@ -42,8 +42,8 @@ const ERROR = {
 };
 
 const ERROR_MESSAGE = {
-  [ERROR.INVALID_REQUEST]: `Make sure you e-mail is filled out`,
-  [ERROR.INVALID_EMAIL]: `Please input a valid e-mail`,
+  [ERROR.INVALID_REQUEST]: `Make sure you email is filled out`,
+  [ERROR.INVALID_EMAIL]: `Please input a valid email`,
   [ERROR.DEFAULT]: `Please try again`,
 };
 

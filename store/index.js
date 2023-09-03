@@ -21,7 +21,8 @@ export const state = () => {
       },
       {
         id: 2,
-        question: "mess up your sleep schedule to achieve your dream?",
+        question: "mess up your sleep schedule",
+        desktopEnding: " to achieve your dream?",
         answers: {
           yes: "it's already messed up",
           no: "no, I need my 8 hours"

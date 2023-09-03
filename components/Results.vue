@@ -116,12 +116,17 @@ export default {
 <style lang="scss" scoped>
 .results {
   display: grid;
-  gap: 30px;
-  width: 81%;
+  gap: 20px;
+  width: 90%;
   height: 77%;
 
   grid-template-columns: 100%;
-  grid-auto-rows: auto 60px minmax(0, 1fr);
+  grid-auto-rows: auto 30px minmax(0, 1fr);
+
+  @include tablet {
+    gap: 25px;
+    grid-auto-rows: auto 40px minmax(0, 1fr);
+  }
 
   @include desktop {
     grid-template-columns: auto auto;
@@ -137,13 +142,17 @@ export default {
     color: var(--color-white);
     display: flex;
     justify-content: flex-end;
-    font-size: 40px;
+    font-size: 25px;
     text-align: center;
 
     text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
       0px -2px 19px rgba(255, 120, 255, 0.7);
 
     letter-spacing: 1.5px;
+
+    @include tablet {
+      font-size: 40px;
+    }
 
     @include desktop {
       grid-row-start: 1;
@@ -182,12 +191,17 @@ export default {
       border: none;
       cursor: pointer;
 
-      height: 60px;
+      height: 30px;
 
-      margin: 0 25px 0 0;
+      margin: 0 15px 0 0;
+      padding: 0;
 
       &:last-child {
-        margin: 0;
+        margin: 0px;
+      }
+
+      @include tablet {
+        height: 40px;
       }
 
       @include desktop {

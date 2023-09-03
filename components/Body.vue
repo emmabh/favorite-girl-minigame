@@ -65,13 +65,14 @@ import EmailForm from "./EmailForm.vue";
 import ProgressBar from "./ProgressBar.vue";
 import { Howl, Howler } from "howler";
 import { CaptchaMixin } from "~/assets/js/mixins/recaptcha";
+import { BreakPointMixin } from "~/assets/js/mixins/breakpoints";
 
 const FADE_CLASSES = {
   FADE_IN: "fade-in",
   FADE_OUT: "fade-out",
 };
 export default {
-  mixins: [CaptchaMixin],
+  mixins: [CaptchaMixin, BreakPointMixin],
   transition: "fade",
   components: { ProgressBar, AnswerButton, EmailForm },
   props: {
@@ -126,7 +127,13 @@ export default {
       } else if (this.$store.state.quizState == QUIZ_STATES.PASSED) {
         return "congrats! you achieved your dream!";
       } else {
-        return this.question;
+        if (this.isTabletAndAbove && this.desktopEnding) {
+          return this.question + this.desktopEnding;
+        } else if (this.desktopEnding) {
+          return this.question + "?";
+        } else {
+          return this.question;
+        }
       }
     },
     subText() {
@@ -149,6 +156,9 @@ export default {
     },
     noAnswer() {
       return this.$store.state.questions[this.index].answers.no;
+    },
+    desktopEnding() {
+      return this.$store.state.questions[this.index].desktopEnding;
     },
     progress() {
       return Math.ceil((this.index / this.$store.state.questions.length) * 100);
@@ -348,6 +358,7 @@ export default {
       text-align: center;
 
       color: var(--color-white);
+
       text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
         0px -2px 19px rgba(255, 120, 255, 0.6);
     }
@@ -367,11 +378,18 @@ export default {
 
       white-space: nowrap;
 
+      text-shadow: none;
+
+      margin: 0 0 8px 0;
+
       @include tablet {
         letter-spacing: 3px;
 
         font-size: 30px;
         margin: 0 0 8px 0;
+
+        text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
+          0px -2px 19px rgba(255, 120, 255, 0.6);
       }
 
       &.nofade {
