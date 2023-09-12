@@ -63,6 +63,14 @@ export default {
   --font-weight-bold: 700;
   --font-weight-extra-bold: 900;
 
+  --text-shadow: 0px 0px 10px rgba(255, 220, 255, 0.3),
+    0px 0px 10px rgba(255, 220, 255, 0.3);
+
+  @include tablet {
+    --text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
+      0px -2px 19px rgba(255, 150, 255, 0.5);
+  }
+
   @for $i from 1 through 20 {
     --size-unit-#{$i}: #{$i * 5px};
   }

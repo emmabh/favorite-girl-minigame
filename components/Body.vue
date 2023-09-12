@@ -359,8 +359,7 @@ export default {
 
       color: var(--color-white);
 
-      text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
-        0px -2px 19px rgba(255, 120, 255, 0.6);
+      text-shadow: var(--text-shadow);
     }
 
     h2 {
@@ -388,8 +387,7 @@ export default {
         font-size: 30px;
         margin: 0 0 8px 0;
 
-        text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
-          0px -2px 19px rgba(255, 120, 255, 0.6);
+        text-shadow: var(--text-shadow);
       }
 
       &.nofade {
@@ -443,8 +441,7 @@ export default {
 
     &__answer {
       color: var(--color-white);
-      text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
-        0px -2px 19px rgba(255, 120, 255, 0.6);
+      text-shadow: var(--text-shadow);
 
       flex: 0 0 60px;
       width: 100%;
@@ -488,8 +485,7 @@ export default {
     position: relative;
     text-align: center;
     color: var(--color-white);
-    text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
-      0px -2px 19px rgba(255, 120, 255, 0.6);
+    text-shadow: var(--text-shadow);
 
     font-size: 16px;
 

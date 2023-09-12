@@ -145,8 +145,7 @@ export default {
     font-size: 25px;
     text-align: center;
 
-    text-shadow: 0px 5px 48px rgba(255, 220, 255, 0.7),
-      0px -2px 19px rgba(255, 120, 255, 0.7);
+    text-shadow: var(--text-shadow);
 
     letter-spacing: 1.5px;
 

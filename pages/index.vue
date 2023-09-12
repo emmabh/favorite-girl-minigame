@@ -1,5 +1,9 @@
 <template>
-  <div class="content" :style="{ '--fade-time': `${fadingTimeSeconds}s` }">
+  <div
+    @click="onClickBody"
+    class="content"
+    :style="{ '--fade-time': `${fadingTimeSeconds}s` }"
+  >
     <div class="body">
       <img
         :class="titleClass"
@@ -39,7 +43,13 @@ export default {
   },
   data: () => {
     return {
+      introStarted: true,
+      introSkipped: false,
+      introFinished: false,
       introWaitTimeSeconds: 1,
+      introHoldTimeSeconds: 10,
+      titleFadingOutTimeout: null,
+      startQuizTimeout: null,
       fadingTimeSeconds: 1,
       fadingHoldTimeSeconds: 3,
       titleClass: "",
@@ -53,18 +63,38 @@ export default {
   },
   mounted() {
     setTimeout(() => {
+      this.introStarted = true;
       this.titleClass = "fading-in";
     }, this.introWaitTimeSeconds * 1000);
 
-    setTimeout(() => {
+    this.titleFadingOutTimeout = setTimeout(() => {
       this.titleClass = "fading-out";
-    }, this.introWaitTimeSeconds * 1000 + this.fadingHoldTimeSeconds * 1000);
+    }, this.introWaitTimeSeconds * 1000 + this.introHoldTimeSeconds * 1000);
 
-    setTimeout(() => {
+    this.startQuizTimeout = setTimeout(() => {
       this.$store.commit("setQuizInProgress", true);
-    }, this.introWaitTimeSeconds * 1000 + this.fadingHoldTimeSeconds * 1000 + this.fadingTimeSeconds * 1000);
+    }, this.introWaitTimeSeconds * 1000 + this.introHoldTimeSeconds * 1000 + this.fadingTimeSeconds * 1000);
   },
   methods: {
+    onClickBody() {
+      if (!this.introFinished) {
+        this.skipIntro();
+      }
+    },
+    skipIntro() {
+      if (!this.introSkipped && this.introStarted) {
+        this.introSkipped = true;
+        this.introFinished = true;
+        clearTimeout(this.titleFadingOutTimeout);
+        clearTimeout(this.startQuizTimeout);
+
+        this.titleClass = "fading-out";
+
+        this.startQuizTimeout = setTimeout(() => {
+          this.$store.commit("setQuizInProgress", true);
+        }, this.fadingTimeSeconds * 1000);
+      }
+    },
     dismissQuiz() {
       this.$store.commit("setQuizInProgress", false);
 
