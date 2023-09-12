@@ -167,9 +167,16 @@ export default {
   methods: {
     async answerSelected(answer) {
       if (!this.showEmailForm) {
+        if (answer == ANSWER_OPTIONS.YES && this.index == 0) {
+          // NB: Show email form
+          this.showEmailForm = true;
+          this.yesSelected = false;
+        } else {
+          this.yesSelected = answer == ANSWER_OPTIONS.YES;
+          this.noSelected = answer == ANSWER_OPTIONS.NO;
+        }
+
         // NB: Submit answer
-        this.yesSelected = answer == ANSWER_OPTIONS.YES;
-        this.noSelected = answer == ANSWER_OPTIONS.NO;
         const recaptcha = await this.getRecaptcha();
         if (recaptcha) {
           console.log(this.id);
@@ -216,8 +223,8 @@ export default {
         if (answer == ANSWER_OPTIONS.YES) {
           if (this.index == 0) {
             // NB: Show email form
-            this.showEmailForm = true;
-            this.yesSelected = false;
+            // this.showEmailForm = true;
+            // this.yesSelected = false;
           } else {
             this.winnerSound.play();
             if (this.index < this.$store.state.questions.length - 1) {
